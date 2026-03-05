@@ -7,14 +7,38 @@
 ```
 chat-highlights/
 ├── topics/       # 主题笔记（AI编程、架构、Flutter等）
+├── docs/         # 项目文档
+│   └── openclaw/ # OpenClaw 飞书机器人文档
 ├── snippets/     # 代码片段
 ├── quotes/       # 金句/观点
 └── new.sh        # 从剪贴板创建新笔记的脚本
 ```
 
-## 快速开始
+## OpenClaw 飞书机器人
 
-### 添加新笔记（macOS）
+本地优先的 AI 助手网关，支持多平台消息集成。
+
+| 文档 | 说明 |
+|-----|------|
+| [配置教程](./docs/openclaw/setup.md) | 安装配置 OpenClaw + 飞书 |
+| [原理说明](./docs/openclaw/how-it-works.md) | 架构、数据流、关键文件 |
+| [故障排查](./docs/openclaw/troubleshooting.md) | 常见问题及解决方案 |
+
+### 快速开始
+
+```bash
+# 安装
+npm install -g openclaw
+
+# 配置 ~/.openclaw/openclaw.json
+
+# 启动
+openclaw gateway --port 18789
+```
+
+## 知识笔记
+
+### 快速添加笔记（macOS）
 
 ```bash
 # 1. 复制内容到剪贴板
@@ -29,7 +53,7 @@ chat-highlights/
 grep -r "关键词" topics/
 
 # GitHub 搜索（推送后）
-# 在 GitHub 搜索框输入：关键词 repo:your-username/chat-highlights
+# 在 GitHub 搜索框输入：关键词 repo:myjourney1992/chat-highlights
 ```
 
 ## 标签索引
@@ -44,4 +68,10 @@ grep -r "关键词" topics/
 
 ## 最近更新
 
-- 2026-03-04: [Addy Osmani - Factory Model](topics/factory-model-ai-coding.md)
+### OpenClaw 文档
+- 2026-03-05: [配置教程](./docs/openclaw/setup.md)
+- 2026-03-05: [原理说明](./docs/openclaw/how-it-works.md)
+- 2026-03-05: [故障排查](./docs/openclaw/troubleshooting.md)
+
+### 知识笔记
+- 2026-03-04: [Addy Osmani - Factory Model](./topics/factory-model-ai-coding.md)
