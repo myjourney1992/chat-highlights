@@ -90,11 +90,55 @@ OpenClaw 配置文件位置：`~/.openclaw/openclaw.json`
 
 | 配置项 | 说明 |
 |--------|------|
-| `models.providers.anthropic.apiKey` | Anthropic API 密钥 |
+| `models.providers.anthropic.baseUrl` | API 地址，使用代理时填代理地址 |
+| `models.providers.anthropic.apiKey` | Anthropic API 密钥或代理密钥 |
 | `channels.feishu.appId` | 飞书应用的 App ID |
 | `channels.feishu.appSecret` | 飞书应用的 App Secret |
+| `agents.defaults.systemPrompt` | 系统提示词，可设置机器人人设/语言偏好 |
 | `gateway.port` | Gateway 监听端口（默认 18789） |
 | `gateway.mode` | 运行模式（local 表示本地模式） |
+
+### 使用 API 代理
+
+如果你使用 API 代理（如第三方 API 服务），需要修改 `baseUrl`：
+
+```json
+"models": {
+  "providers": {
+    "anthropic": {
+      "baseUrl": "https://your-proxy.com/api",
+      "apiKey": "your-proxy-api-key",
+      "models": [...]
+    }
+  }
+}
+```
+
+### 查询代理支持的模型列表
+
+使用代理时，可以先用 curl 查询支持的模型：
+
+```bash
+curl -H "x-api-key: your-api-key" \
+     -H "anthropic-version: 2023-06-01" \
+     https://your-proxy.com/api/v1/models
+```
+
+返回的 `data.id` 就是可用的模型名称，需要在配置中使用完全一致的名称。
+
+### 设置中文回复
+
+在 `agents.defaults` 中添加 `systemPrompt`：
+
+```json
+"agents": {
+  "defaults": {
+    "model": {
+      "primary": "anthropic/claude-opus-4-5-20251101"
+    },
+    "systemPrompt": "你是一个友好的 AI 助手。请始终用简体中文回复用户。"
+  }
+}
 
 ## 飞书开放平台配置
 
@@ -301,6 +345,77 @@ openclaw doctor --fix
 **症状**：日志显示 `plugin feishu: duplicate plugin id detected`
 
 **说明**：这是正常警告，不影响使用。OpenClaw 会自动处理。
+
+### 问题 5：HTTP 401 authentication_error: invalid x-api-key
+
+**症状**：日志显示 `HTTP 401 authentication_error: invalid x-api-key`
+
+**原因分析**：
+1. 如果你使用 API 代理，配置中的 `baseUrl` 可能仍是官方地址 `https://api.anthropic.com`
+2. 代理服务需要的认证方式可能与官方不同
+
+**解决方法**：
+1. 确认 `baseUrl` 是否指向代理地址
+2. 检查 `apiKey` 是否正确（代理服务提供的密钥）
+3. 重启 Gateway：
+   ```bash
+   lsof -i :18789 -t | xargs kill -9
+   openclaw gateway --port 18789
+   ```
+
+### 问题 6：500 No available Claude accounts support the requested model
+
+**症状**：日志显示 `500 No available Claude accounts support the requested model: xxx`
+
+**原因分析**：
+- 代理服务支持的模型列表与官方不同
+- 配置中的模型 ID 在代理服务中不存在
+
+**解决方法**：
+1. 先查询代理支持的模型列表：
+   ```bash
+   curl -H "x-api-key: your-api-key" \
+        -H "anthropic-version: 2023-06-01" \
+        https://your-proxy.com/api/v1/models | jq '.data[].id'
+   ```
+
+2. 修改配置使用代理支持的模型：
+   ```json
+   "models": [
+     {
+       "id": "claude-opus-4-5-20251101",  // 使用代理支持的模型 ID
+       "name": "Claude Opus 4.5"
+     }
+   ],
+   "agents": {
+     "defaults": {
+       "model": {
+         "primary": "anthropic/claude-opus-4-5-20251101"
+       }
+     }
+   }
+   ```
+
+3. 重启 Gateway
+
+### 问题 7：机器人回复语言不正确（如回复英文但想要中文）
+
+**症状**：机器人用英文回复，但希望用中文回复
+
+**解决方法**：在配置中添加 `systemPrompt`：
+
+```json
+"agents": {
+  "defaults": {
+    "model": {
+      "primary": "anthropic/claude-opus-4-5-20251101"
+    },
+    "systemPrompt": "你是一个友好的 AI 助手。请始终用简体中文回复用户。"
+  }
+}
+```
+
+重启 Gateway 后生效。
 
 ## 日志关键词
 
