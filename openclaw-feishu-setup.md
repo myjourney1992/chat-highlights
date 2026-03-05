@@ -128,17 +128,21 @@ curl -H "x-api-key: your-api-key" \
 
 ### 设置中文回复
 
-在 `agents.defaults` 中添加 `systemPrompt`：
+OpenClaw 使用 workspace 文件来定义 agent 行为。编辑 `SOUL.md` 添加语言偏好：
 
-```json
-"agents": {
-  "defaults": {
-    "model": {
-      "primary": "anthropic/claude-opus-4-5-20251101"
-    },
-    "systemPrompt": "你是一个友好的 AI 助手。请始终用简体中文回复用户。"
-  }
-}
+```bash
+vim ~/.openclaw/workspace/SOUL.md
+```
+
+在 `Core Truths` 部分添加：
+
+```markdown
+## Core Truths
+
+**Always reply in Simplified Chinese (简体中文).** 无论用户用什么语言提问，都用简体中文回答。
+```
+
+重启 Gateway 后生效。
 
 ## 飞书开放平台配置
 
@@ -402,20 +406,27 @@ openclaw doctor --fix
 
 **症状**：机器人用英文回复，但希望用中文回复
 
-**解决方法**：在配置中添加 `systemPrompt`：
+**解决方法**：编辑 workspace 的 `SOUL.md` 文件添加语言偏好：
 
-```json
-"agents": {
-  "defaults": {
-    "model": {
-      "primary": "anthropic/claude-opus-4-5-20251101"
-    },
-    "systemPrompt": "你是一个友好的 AI 助手。请始终用简体中文回复用户。"
-  }
-}
+```bash
+vim ~/.openclaw/workspace/SOUL.md
 ```
 
-重启 Gateway 后生效。
+在 `Core Truths` 部分添加：
+
+```markdown
+## Core Truths
+
+**Always reply in Simplified Chinese (简体中文).** 无论用户用什么语言提问，都用简体中文回答。
+```
+
+重启 Gateway：
+```bash
+lsof -i :18789 -t | xargs kill -9
+openclaw gateway --port 18789
+```
+
+**注意**：不要在 `openclaw.json` 中添加 `systemPrompt`，这是无效的配置键。
 
 ## 日志关键词
 
