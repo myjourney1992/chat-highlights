@@ -14,13 +14,14 @@ chat-highlights/
 └── new.sh        # 从剪贴板创建新笔记的脚本
 ```
 
-## OpenClaw 飞书机器人
+## OpenClaw 多平台机器人
 
 本地优先的 AI 助手网关，支持多平台消息集成。
 
 | 文档 | 说明 |
 |-----|------|
-| [配置教程](./docs/openclaw/setup.md) | 安装配置 OpenClaw + 飞书 |
+| [飞书配置教程](./docs/openclaw/setup.md) | 安装配置 OpenClaw + 飞书 |
+| [企业微信配置教程](./docs/openclaw/wecom-setup.md) | 安装配置 OpenClaw + 企业微信（WebSocket 长连接）|
 | [原理说明](./docs/openclaw/how-it-works.md) | 架构、数据流、关键文件 |
 | [高级配置](./docs/openclaw/advanced.md) | 身份、记忆、心跳、技能扩展 |
 | [故障排查](./docs/openclaw/troubleshooting.md) | 常见问题及解决方案 |
