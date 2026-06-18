@@ -68,6 +68,7 @@ grep -r "关键词" topics/
 | `tdd` | 测试驱动开发 | 1 |
 | `architecture` | 架构设计 | - |
 | `flutter` | Flutter 相关 | - |
+| `troubleshooting` | 排障笔记 | 1 |
 
 ## 最近更新
 
@@ -78,4 +79,5 @@ grep -r "关键词" topics/
 - 2026-03-05: [故障排查](./docs/openclaw/troubleshooting.md)
 
 ### 知识笔记
+- 2026-06-18: [Claude 桌面 App 连 VPN 闪动 — Cloudflare WARP 根治方案](./topics/20260618-claude-app-cloudflare-warp.md)
 - 2026-03-04: [Addy Osmani - Factory Model](./topics/factory-model-ai-coding.md)
